@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Today's Blue Plate Special</title>
+	<meta name="generator" content="TextMate http://macromates.com/">
+	<meta name="author" content="Adam Singer">
+	<!-- Date: 2010-05-22 -->
+	<link rel="stylesheet" href="/stylesheets/application.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<link rel="stylesheet" href="/stylesheets/jquery.tweet.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	
+	<script src="/javascripts/jquery-1.4.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/javascripts/jquery-ui.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/javascripts/json2.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/javascripts/blueplate.jquery.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/javascripts/md5.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/javascripts/jquery.tweet.js" type="text/javascript" charset="utf-8"></script>
+	
+	<script type="text/javascript" charset="utf-8">
+	
+		$(document).ready(function() {
+			var user = JSON.parse('{"email":"adam@artforge.com","name":"Adam Singer","location":"New York, NY"}')
+			var contacts = JSON.parse('[{"email":"adam@artforge.com","name":"Adam Singer","location":"New York, NY","tasks":0},{"email":"aminharis7@gmail.com","name":"Haris Amin","location":"Brooklyn, NY","tasks":0},{"email":"mjording@gmail.com","name":"Matt Jording","location":"Brooklyn, NY","tasks":0},{"email":"nmeersschaert@mac.com","name":"Niels Meersschaert","location":"Brooklyn, NY","tasks":0},{"email":"moishefriedman@gmail.com","name":"Moishe Friedman","location":"New York, NY","tasks":0}]')
+			var tasks = JSON.parse('[{"id":"GUID1","description":"This is something I need to do!"},{"id":"GUID2","description":"This is another thing I need to do!"},{"id":"GUID1","description":"This is something I need to do!"},{"id":"GUID2","description":"This is another thing I need to do!"},{"id":"GUID1","description":"This is something I need to do!"},{"id":"GUID2","description":"This is another thing I need to do!"}]');
+		
+			loadUser(user);
+			populateInbox(tasks)
+			populateContacts(contacts);
+			
+			twitterSearch("#hackdisrupt",8);
+		});
+		
+		function populateContacts(contacts){
+			var template = $('#hidden_templates .contact');
+			$(contacts).each(function(i){
+				var contact = contacts[i];
+				elContact = template.clone();
+				elContact.data("user",contact);
+				elContact.find(".image").attr("style","background:url(" + gravatar_url(contact.email,60) + ");")
+				
+				$(elContact).droppable({
+					hoverClass: 'highlight',
+					drop: delegate_task
+				});
+				$("#contacts").append(elContact).fadeIn();
+			})
+		}
+		
+		function populateInbox(tasks){
+			var template = $('#hidden_templates .task');
+			$(tasks).each(function(i){
+				elTask = $("#inbox").append($('<div>').bp_task(tasks[i],{template: template}).fadeIn());	
+			})
+			$("#inbox,#tickets,#trash").sortable({
+				connectWith: '.list_module',
+				cursor: 'crosshair',
+				opacity: 0.5,
+				scroll: true,
+				update: ticket_task
+			}).disableSelection();
+		}
+		
+		function gravatar_url(email,size){
+			return "http://www.gravatar.com/avatar/" + MD5(email) + "?s=" + size;
+		}
+		
+		function loadUser(user){
+			$("#avatar").attr("src",gravatar_url(user.email,50));
+			$("#user .username").html(user.name);
+			$("#user .location").html(user.location);
+		}
+		
+		function twitterSearch(searchTerm, results){
+			$("#query").tweet({avatar_size: 32,count: results, query: searchTerm,loading_text: "searching twitter..."});
+		}
+		
+		function delegate_task(event,ui){
+			dropped_item = $(ui.draggable).find(".task").parent();
+			var task = dropped_item.data("task")
+			var target = event.target;
+			var contact = $(target).data("user");
+			console.log("You Dropped task " + task.id + " into " + contact.email);
+			addTaskIndicator(target);
+			dropped_item.remove();
+		}
+		
+		function addTaskIndicator(elUser){
+			var contact = $(elUser).data("user");
+			contact.tasks += 1;
+			
+			elIndicator = $(elUser).find(".task_indicator");
+			elIndicator.find("span").html(contact.tasks);
+			elIndicator.show()
+			console.log(contact.tasks);
+		}
+		
+		function ticket_task(event,ui){
+			if (ui.sender){
+				dropped_item = $(ui.item)
+				target = this
+				task = dropped_item.data("task")
+				if (target.id == "trash"){
+					dropped_item.fadeOut();
+				}
+				console.log("You Dropped task " + task.id + " into " + target.id);
+			}
+		}
+	
+	</script>
+	
+</head>
+<body>
+	
+	<div id="page">
+	
+	<div id="header">
+		<div id="logo"></div>
+		<h1>Blue Plate</h1>
+		<div id="user" class="fr">
+			<img id="avatar" class="fl" src="http://www.gravatar.com/avatar/?s=48" style="vertical-align:top;">
+			<div class="info fl">
+				Welcome <span class="username">Anonymous User</span><br/>
+				From <span class="location">Somewhere secret</span><br/>
+				<a href="#">Logout</a>
+			</div>
+			<div class="clr"></div>
+		</div>
+		<div class="clr"></div>
+	</div>
+	
+	<div id="inbox" class="fl list_module">
+		
+	</div>
+	
+	<div id="tickets" class="fl list_module">
+		
+	</div>
+	
+	<div class="fr">
+		<div id="contacts" class="list_module last">
+		
+		</div>
+		<div id="trash" class="list_module last">
+		
+		</div>
+	</div>
+	
+	<!-- <div id="query" class="query list_module fl" style="width:400px;"></div> -->
+	
+	<div id="hidden_templates" style="display:none;">
+		<div class="task corner-all-5">
+			<div class="source_icon"></div>
+			<div class="subject"></div>
+		</div>
+		
+		<div class="contact">
+			<div class="task_indicator"><span>0</span></div>
+			<div class="image"></div>
+		</div>
+	</div>
+	</div>
+
+</body>
+</html>
