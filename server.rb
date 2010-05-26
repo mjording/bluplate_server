@@ -43,10 +43,10 @@ class Server < Sinatra::Base
          session[:access_token] = @access_token.token
          session[:secret_token] = @access_token.secret
          session[:user] = true
-       
+         
          #update or record user in mongo
          #no need to store key for mongo stored user as we should always have @client.info['screen_name']
-         @user = User.find_by_userid("test@tester.com") ? User.find_by_userid("test@tester.com") : User.create(:userid => "test@tester.com")
+         @user = Bluplate::User.find_by_email("#{@client.info[:user_id]}@twitter.com") ? Bluplate::User.find_by_email("#{@client.info[:user_id]}test@twitter.com") : Bluplate::User.create(:userid => "#{@client.info[:user_id]}@twitter.com")
          #@s = mongo["users"].find("name" => @client.info['screen_name']).first
          #@account = s && s.class == OrderedHash ? Account.new(s) : Account.new(:name => @client.info['screen_name'])
          #@account.last_login_at = Time.now
