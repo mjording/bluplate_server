@@ -5,7 +5,7 @@ body{font-family:arial;font-size:10pt;}
 
 #page{width:960px;margin:0 auto;}
 
-#header{position:relative;border-bottom:3px double #ccc;padding:5px;margin:5px 0px 10px;}
+#header{position:relative;border-bottom:3px double #ccc;padding:20px;margin:5px 0px 10px;}
 #logo{top:-12px;position:absolute;z-index:2;background:url(/images/blueplate.png) no-repeat;width:100px;height:100px;}
 #header h1{float:left;margin:5px 0 0 120px;font-size:24pt;font-family:arial black;color:#2136b3;}
 #user{}

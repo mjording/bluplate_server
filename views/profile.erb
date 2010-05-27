@@ -1,67 +1,58 @@
-<div id="pagehead">
-<%#= @account.name %>
+	<div id="header">
+		<div id="logo"></div>
+		<h1>Blue Plate</h1>
+		<div id="user" class="fr">
+		  
+			<img id="avatar" class="fl" src="<%= @client_user_profile_image %>" style="vertical-align:top;">
+			<div class="info fl">
+				Welcome <span class="username"><%= @client_user_name %></span><br/>
+				From <span class="location"><%= @client_user_location %></span><br/>
+				<a href="#">Logout</a>
+			</div>
+			<div class="clr"></div>
+		</div>
+		<div class="clr"></div>
+	</div>
+
+
+
+<div id="inbox" class="fl list_module">
+  		<h2>Inbox</h2>
+  		<div class="items"></div>
 </div>
-<div class="action_header">
-  <div id="inbox_action_header" class="container_column">
+  <div id="tickets" class="fl list_module">
+		<h2>On your plate</h2>
+		<div class="items"></div>
+	</div>
+	
+	<div class="fr">
+		<div id="contacts" class="list_module last">
+			<h2>Contacts</h2>
+			<div class="items">
+			  <%# @s.each_with_index do |item, ind|%>
+        <%# @account.inbox.each_with_index do |item, ind| %>
+          <%#= item["screen_name"] %>
 
-    <a href="#" id="add_item_form_trigger" class="active_action_trigger">Add Item</a>
-
-    
-  </div>
-  <div id="workstream_action_header" class="container_column">
-
-    <a href="#" id="s"></a>
-
-  </div>
-  <div id="contacts_action_header" class="container_column">
-  
-      <a href="#" id="add_contact_form_trigger" class="active_action_trigger">Add Contact</a>
-  
-    
-  </div>
-</div>
-  <div id="action_content">
-    <div id="new_item_form_container">
-      <form name="new_item_form" id="new_item">
-       <textarea tabindex="1" autocomplete="off" accesskey="u" name="work_item" id="workitem" rows="3" cols="25"></textarea>
-        <input type="hidden" value="<%#= @account.name %>" id="author">
-        
-        <input type="submit" value="Add">
-      
-      </form>
-    </div>
-
-</div>
-<div class="active_mods">
-  <div id="inbox_column" class="container_column list_container">
-
-
-      <h2 class="column_header">INBOX</h2>
-      <ul id="inbox" class="ui-droppable">
-      <%# @s.each_with_index do |item, ind|%>
-      <%# @account.inbox.each_with_index do |item, ind| %>
-        <li class="weight_one ui-draggable" dds="<%#=ind%>" style="cursor: pointer;"><%#= item["screen_name"] %></li>
-  
-      <%# end %>
-      </ul>
-  </div>
-  <div id="workstream_column" class="container_column list_container">
-    <h2 class="column_header">WORKSTREAM</h2>
-    <ul id="workstream" class="ui-droppable">
-      
-      <%# @account.work_stream.each do |item| %>
-        <li class="ui-draggable" dds="<%#=item.inbox_order_number%>" style="cursor: pointer;">><%#= ticket.subject %></li>
-      <%# end %>
-    </ul>
-  </div>
-  <div id="contacts_column" class="container_column list_container">
-     <h2 class="column_header">CONTACTS</h2>
-    <ul id="contacts">
-      <% @s.each_with_index do |item, ind|%>
-      <%# @account.inbox.each_with_index do |item, ind| %>
-        <li class="weight_one ui-draggable" dds="<%=ind%>" style="cursor: pointer;"><%= item["screen_name"] %></li>
-  
-      <% end %>
-    </ul>
-  </div>
-  </div>
+        <%# end %>
+			 
+			 
+			</div>
+		</div>
+		<div id="trash" class="list_module last">
+			<div id="trashbin" class="items"></div>
+		</div>
+	</div>
+	
+	<!-- <div id="query" class="query list_module fl" style="width:400px;"></div> -->
+	
+	<div id="hidden_templates" style="display:none;">
+		<div class="task corner-all-5">
+			<div class="source_icon"></div>
+			<div class="subject"></div>
+		</div>
+		
+		<div class="contact">
+			<div class="task_indicator"><span>0</span></div>
+			<div class="image"></div>
+		</div>
+	</div>

@@ -1,5 +1,7 @@
 (function($) {
 
+	
+
 	$.fn.bp_task = function(task,settings) {
 		var config = {
 			id: 0,
@@ -137,6 +139,7 @@
 		return this; 
 		
 	}
+	
  
  })(jQuery);
 

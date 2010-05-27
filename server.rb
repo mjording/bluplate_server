@@ -10,6 +10,11 @@ require 'configuration'
 
 class Server < Sinatra::Base
   @@config = Configuration
+  
+  dir = File.dirname(File.expand_path(__FILE__))
+  
+  set :views, "#{dir}/views"
+  set :public, "#{dir}/public"
   set :sessions, true
   
   before do
@@ -46,7 +51,7 @@ class Server < Sinatra::Base
          
          #update or record user in mongo
          #no need to store key for mongo stored user as we should always have @client.info['screen_name']
-         @user = Bluplate::User.find_by_email("#{@client.info[:user_id]}@twitter.com") ? Bluplate::User.find_by_email("#{@client.info[:user_id]}test@twitter.com") : Bluplate::User.create(:userid => "#{@client.info[:user_id]}@twitter.com")
+         @user = Bluplate::User.find_by_email("#{@client.info['user_id']}@twitter.com") ? Bluplate::User.find_by_email("#{@client.info['user_id']}@twitter.com") : Bluplate::User.create(:userid => "#{@client.info['user_id']}@twitter.com")
          #@s = mongo["users"].find("name" => @client.info['screen_name']).first
          #@account = s && s.class == OrderedHash ? Account.new(s) : Account.new(:name => @client.info['screen_name'])
          #@account.last_login_at = Time.now
@@ -75,7 +80,10 @@ class Server < Sinatra::Base
   end
   get '/profile' do
     @s = @client.all_friends
-    #@account ||= Account.new mongo["users"].find("name" => @client.info['screen_name']).first
+    #@client_user_id = @client.info || "me"
+    @client_user_name = @client.info['name'] 
+    @client_user_profile_image = @client.info['profile_image_url']
+    @client_user_location = @client.info['location'] 
     erb :profile
   end
   get '/ping' do

@@ -7,9 +7,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<title>Today's Blue Plate Special</title>
-	<meta name="generator" content="TextMate http://macromates.com/">
 	<meta name="author" content="Adam Singer">
-	<!-- Date: 2010-05-22 -->
 	<link rel="stylesheet" href="stylesheets/application.css" type="text/css" media="screen" title="no title" charset="utf-8">
 	<link rel="stylesheet" href="stylesheets/jquery.tweet.css" type="text/css" media="screen" title="no title" charset="utf-8">
 	<link rel="stylesheet" href="stylesheets/facebox.css" type="text/css" media="screen" title="no title" charset="utf-8">
@@ -22,9 +20,29 @@
 	<!--<script src="javascripts/jquery.tweet.js" type="text/javascript" charset="utf-8"></script>-->
 	<script src="javascripts/facebox.js" type="text/javascript" charset="utf-8"></script>
 	
-	<script type="text/javascript" charset="utf-8">
-	
-		$(document).ready(function() {
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false">	</script>
+  <script type="text/javascript" charset="utf-8">
+function getAddress(lat,lng){ 
+  var geocoder = new google.maps.Geocoder();
+  
+  geocoder.geocode({'latLng':  new google.maps.LatLng(lat,lng)}, function(results, status){
+   $("#user .location").html( results[1].formatted_address );
+  });
+  
+};
+</script>
+
+</head>
+  <body>
+    <div id="page">
+
+  
+      <%= yield %>
+  </div>
+  </body>
+  <script type="text/javascript" charset="utf-8">
+    
+    // $(document).ready(function() {
 			var user = JSON.parse('{"email":"adam@artforge.com","name":"Adam Singer","location":"New York, NY"}')
 			var contacts = JSON.parse('[{"email":"adam@artforge.com","name":"Adam Singer","location":"New York, NY","tasks":0},{"email":"aminharis7@gmail.com","name":"Haris Amin","location":"Brooklyn, NY","tasks":0},{"email":"mjording@gmail.com","name":"Matt Jording","location":"Brooklyn, NY","tasks":0}]')
 			var tasks = JSON.parse('[{"id":"GUID1","description":"This is something I need to do!"},{"id":"GUID2","description":"This is another thing I need to do!"},{"id":"GUID1","description":"This is something I need to do!"},{"id":"GUID2","description":"This is another thing I need to do!"},{"id":"GUID1","description":"This is something I need to do!"},{"id":"GUID2","description":"This is another thing I need to do!"}]');
@@ -35,7 +53,7 @@
 			
 			$("#contacts .contact").live("click",sendDirectMessage)
 			// twitterSearch("#hackdisrupt",8);
-		});
+    // });
 		
 		function sendDirectMessage(){
 			var user = $(this).data("user");
@@ -77,9 +95,14 @@
 		}
 		
 		function loadUser(user){
-			$("#avatar").attr("src",gravatar_url(user.email,50));
-			$("#user .username").html(user.name);
-			$("#user .location").html(user.location);
+      // $("#avatar").attr("src",gravatar_url(user.email,50));
+      // $("#user .username").html(user.name);
+      // $("#user .location").html(user.location);
+      var lal = $("#user .location").html().split(',');
+      var latlong = $.map( lal, function(a){
+          return a / 1;
+        });
+      getAddress(latlong[0],latlong[1]);
 		}
 		
 		function twitterSearch(searchTerm, results){
@@ -118,12 +141,13 @@
 			}
 		}
 		
-		
+	
+    
+    
+    
+    
+    
+    
 	
 	</script>
-	
-</head>
-  <body>
-      <%= yield %>
-  </body>
 </html>
